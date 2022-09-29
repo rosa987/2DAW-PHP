@@ -40,9 +40,29 @@ print_r($arrayUnion2);
 echo "</br>";
 echo "</br>";
 //-------------------------Part C---------------------------------
-//Creo un array vacio
+
+/*
+//NO ES BUENO
+//NO es una manera valida pero funciona:
 $arrayUnion3=[];
 array_push($arrayUnion3, ...$array1, ...$array2,...$array3);
+print_r($arrayUnion3);
+*/
+$arrayUnion3=[];
+//Unir los 3 arrays en uno unico
+for ($i = 0; $i < $arrlength1; $i++) {
+   $array1[$i];
+   array_push($arrayUnion3,$array1[$i]);
+}
+
+for ($i = 0; $i < $arrlength2; $i++) {
+   $array2[$i];
+   array_push($arrayUnion3,$array2[$i]);
+}
+for ($i = 0; $i < $arrlength3; $i++) {
+    $array3[$i];
+   array_push($arrayUnion3,$array3[$i]);
+}
 print_r($arrayUnion3);
 ?>
 
