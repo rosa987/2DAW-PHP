@@ -39,10 +39,25 @@ echo "<br>";
 echo "puntero en la última posición y muestra el valor= ".end($edad). "<br>";
 echo "<br>";
 //--------E. Ordena el array por orden de edad (de menor a mayor) y muestra la primera posición del array y la última----------------------------------
-sort($edad);
-echo "Valor de la 1º posicion del array= ".current($edad) . "<br>";
-echo "Valor de la ultima posicion del array= ".end($edad);
+//asort() mantiene las keys originales y ordena los valores
+asort($edad);
 echo "<br>";
+foreach($edad as $i => $i_value) {
+  echo "Key=" . $i . ", Value=" . $i_value;
+  echo "<br>";
+  echo "<br>";
+}
+echo "<br>";
+//array_keys() devuelve un array indexado con las keys del array $edad que meto en el array $arraypos1
+$arraypos1=array_keys($edad,5);
+//print_r($arraypos1);
+
+$arrayposEnd=array_keys($edad,81);
+//print_r($arrayposEnd);
+
+echo "Valor de la 1º posicion del array= ".current($edad) . " y su key= ".$arraypos1[0]."<br>";
+echo "Valor de la ultima posicion del array= ".end($edad). " y su key= ".$arrayposEnd[0]."<br>";
+
 ?>
 
 </body>
