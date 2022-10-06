@@ -203,17 +203,8 @@ for ($j = 0; $j < count($java); $j++) {
 $suma;
 echo "Media de JAVA= ".$suma/count($java)."</br>";
  echo "<br>";
-///-------F. Mostrar la media por alumno para todas las materias---------------- 
- /*foreach ($notas as $clave => $valor) {
-       $mediaGlobal=0;
-        foreach ($valor as $clave2 => $valor2) {         
-            $mediaGlobal = $valor2 + $mediaGlobal;         
-        }
-        
-        echo "la nota media de " . $clave . " es ". $mediaGlobal/4;
-        echo "</br>";
-    }
-*/
+
+ 
 ///-------F. Mostrar la media por alumno para todas las materias---------------- 
 
     echo "<br>";
