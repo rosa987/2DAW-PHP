@@ -26,28 +26,30 @@ $nombre = $apellido1 = $apellido2 = $fnacimiento = $localidad = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nombre = test_input($_POST["nombre"]);
-	$txt=str_pad($nombre,40); 
+	$txt=str_pad($nombre,39); 
   fwrite($myfile, $txt);
 
     $apellido1 = test_input($_POST["apellido1"]);
-	   $apellido1=str_pad($apellido1,81);
+	   $apellido1=str_pad($apellido1,40);
     $txt=$apellido1;
 	fwrite($myfile, $txt);
 	
     $apellido2 = test_input($_POST["apellido2"]);
-		  $apellido2=str_pad($apellido2,123);
+		  $apellido2=str_pad($apellido2,41);
     $txt=$apellido2;
 	fwrite($myfile, $txt);
 	
     $fnacimiento = test_input($_POST["fnacimiento"]);
-		$fnacimiento=str_pad($fnacimiento,133);
+		$fnacimiento=str_pad($fnacimiento,9);
     $txt=$fnacimiento;
 	fwrite($myfile, $txt);
 	
     $localidad = test_input($_POST["localidad"]);
-		$localidad=str_pad($localidad,160);
+		$localidad=str_pad($localidad,26);
     $txt=$localidad;
-	fwrite($myfile, $txt);
+	fwrite($myfile, $txt."\n"); // "\n" es salto de linea en php
+	
+	//fwrite ($myfile, "\n"); //salto de linea en php
 	
 	fclose($myfile);
 }
@@ -66,12 +68,7 @@ function test_input($data) {
 
 }
 
-
-
-
 ?>
-
-
 
 </body>
 
