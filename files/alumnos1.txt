@@ -1,2 +1,2 @@
-maria                                   garcia                                  perez                                    12/03/1800Madrid                    
-pablo                                   Vallejo                                 Jimenez                                  12/03/1700Murcia                    
+maria                                   garcia                                  Jimenez                                  12/03/20 Murcia                    
+sol                                     ramirez                                 flores                                   12/03/20 Galicia                   
