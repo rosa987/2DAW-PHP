@@ -26,7 +26,7 @@ $nombre = $apellido1 = $apellido2 = $fnacimiento = $localidad = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $nombre = test_input($_POST["nombre"]);
-	$txt=str_pad($nombre,39); 
+	$txt=str_pad($nombre,40); 
   fwrite($myfile, $txt);
 
     $apellido1 = test_input($_POST["apellido1"]);
@@ -65,11 +65,12 @@ function test_input($data) {
   $data = htmlspecialchars($data);
 
   return $data;
-
 }
 
 ?>
-
+<p>
+ Se ha creado el fichero.
+</p>
 </body>
 
 </html>
