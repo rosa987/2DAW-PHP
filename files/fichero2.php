@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	fwrite($myfile, $txt);
 	
     $localidad = test_input($_POST["localidad"]);
-		$localidad=str_pad($localidad,strlen($localidad)+"2", "##");
+		$localidad=str_pad($localidad,strlen($localidad));
     $txt=$localidad;
 	fwrite($myfile, $txt."\n"); // "\n" es salto de linea en php
 	

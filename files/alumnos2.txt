@@ -1,2 +1,2 @@
-maria##garcia##perez##12/03/1800##Madrid##
-sol##Vallejo##Jimenez##12/03/1700##Galicia##
+Jose##Vallejo##Jimenez##12/03/2000##Madrid
+maria##ramirez##flores##12/03/1801##Murcia
