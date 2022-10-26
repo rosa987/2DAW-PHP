@@ -7,6 +7,7 @@ $contarLineas = 0;
 
 while (!feof($file)){   
     $datos = fgets($file); 
+	var_dump($datos);
 		
 	list($nombre, $apellido1, $apellido2, $fnacimiento, $localidad) = explode("##", $datos);
 	
