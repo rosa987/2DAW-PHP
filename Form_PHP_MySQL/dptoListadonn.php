@@ -27,22 +27,16 @@ try {
       
     $stmt->setFetchMode(PDO::FETCH_ASSOC); 
     $resultado=$stmt->fetchAll();
-    var_dump($resultado);  //BIEN
-    $departamentos = array();
-  
-    $departamentos[] = $resultado['NOMBRE'];
-   
-   
-    var_dump($departamentos);
-    
+    //var_dump($resultado);  //BIEN
+ 
     echo '<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">';
     
     ?>
     <div>
 	<label for="departamento">Departamentos:</label>
 	<select name="departamento">
-		<?php foreach($departamentos as $departamento) : ?>
-			<option> <?php echo $departamento ?> </option>
+		<?php foreach($resultado as $row) : ?>
+			<option> <?php echo $row["NOMBRE"]. "<br>" ?> </option>
 		<?php endforeach; ?>
 	</select>
 	</div>
