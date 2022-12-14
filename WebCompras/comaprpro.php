@@ -48,8 +48,19 @@ else if ($_SERVER["REQUEST_METHOD"]== "POST"){
     $cantidad=$_POST["cantidad"];
     if(!empty($cantidad)){ //NO ME DEJA METER CANTIDAD 0
         $conn=conexion();
-         asignarCantidad($conn, $num_almacen, $id_producto, $cantidad); //asignar cantidad
-            $conn = null;
+        $arrayProductExisteALMACENA=verSiProductoExisteEnALMACENA($conn, $num_almacen, $id_producto);
+        var_dump($arrayProductExisteALMACENA);
+        $conn = null;
+        if(empty($arrayProductExisteALMACENA)==true){ //SI el producto no existe, se hace un INSERT INTO en ALMACENA
+            $conn=conexion();
+            asignarCantidad($conn, $num_almacen, $id_producto, $cantidad); //asignar cantidad
+               $conn = null;
+        }else{//update cantidad en Almacena.   SI el producto SI existe, se hace un UPDATE en ALMACENA
+            $conn=conexion();
+            actualizarCantidadDeProductoExistente($conn, $num_almacen, $id_producto, $cantidad); //actualizar cantidad en un determinado nº de almacen
+               $conn = null;
+        }
+     
     }
 }
 ?>

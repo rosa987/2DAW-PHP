@@ -37,10 +37,15 @@ else if ($_SERVER["REQUEST_METHOD"]== "POST"){
 
         $conn=conexion();
         $arrayProductosEnAlmacen=verProductosEnAlmacen($conn, $num_almacen); //asignar cantidad
-        foreach($arrayProductosEnAlmacen as $row) {
+        if(count($arrayProductosEnAlmacen)==0){
+            echo "El almacen $num_almacen está vacio";
+        }else{
+            foreach($arrayProductosEnAlmacen as $row) {
             echo "Nombre del producto: " . $row["nombre"]. " || precio: " . $row["precio"]. " € || id_categoria: " . $row["id_categoria"]. "  || Nº almacen: " . $row["num_almacen"]."  || id producto: " . $row["id_producto"]."  || Cantidad disponible: " . $row["cantidad"]. "<br>";
         }    
         $conn = null;
+        }
+       
 }
 ?>
 </BODY>

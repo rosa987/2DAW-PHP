@@ -37,11 +37,18 @@ else if ($_SERVER["REQUEST_METHOD"]== "POST"){
 
         $conn=conexion();
         $arrayCantidadDisponible=verStockDisponible($conn, $id_producto); //mostrar cantidad disponible
-        foreach($arrayCantidadDisponible as $row) {
-            echo "Nombre del producto: " . $row["nombre"]. "  || Nº almacen: " . $row["num_almacen"]."  || id: " . $row["id_producto"]."  || Cantidad disponible: " . $row["cantidad"]. "<br>";
+        var_dump($arrayCantidadDisponible);
+        if(count($arrayCantidadDisponible)<=0){ //mejor ==0
+            echo "ERROR. No se ha dado de alta el producto en ALMACENA. Es decir, no se encuenta almacenado en ningun almacen";
+            $conn = null;
+        }else{
+            foreach($arrayCantidadDisponible as $row) {
+                echo "Nombre del producto: " . $row["nombre"]. "  || Nº almacen: " . $row["num_almacen"]."  || id: " . $row["id_producto"]."  || Cantidad disponible: " . $row["cantidad"]. "<br>";
+            }
+            $conn = null;
+        
         }
-        $conn = null;
-    
+       
 }
 ?>
 </BODY>

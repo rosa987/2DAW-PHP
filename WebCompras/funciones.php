@@ -191,6 +191,19 @@ function verNumAlmacen($conn){
     return $arrayAso;
 }
 
+//VER SI el PRODUCTO(ID) EN ALMACENA EXISTE O NO  EN UN DETERMINADO NUM_ALMACEN
+function verSiProductoExisteEnALMACENA($conn, $num_almacen, $id_producto){
+    $stmt = $conn->prepare("SELECT num_almacen=:num_almacen, id_producto FROM ALMACENA WHERE ALMACENA.id_producto=:id_producto");     
+    $stmt -> bindParam(':num_almacen',$num_almacen);
+    $stmt -> bindParam(':id_producto',$id_producto);
+
+    $stmt->execute();
+    $arrayAso = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $arrayAso = $stmt->fetchAll(); 
+    
+    return  $arrayAso;
+   
+}
 function asignarCantidad($conn, $num_almacen, $id_producto, $cantidad){
     $stmt = $conn->prepare("INSERT INTO ALMACENA (num_almacen, id_producto, cantidad) VALUES(:num_almacen, :id_producto, :cantidad);");     
 
@@ -201,6 +214,19 @@ function asignarCantidad($conn, $num_almacen, $id_producto, $cantidad){
     $stmt->execute();
     echo "<br>";
     echo "La cantidad $cantidad se ha asignado correctamente al producto con id $id_producto";
+}
+
+//Va incrementando la cantidad en un determinado num_almacen
+function actualizarCantidadDeProductoExistente($conn, $num_almacen, $id_producto, $cantidad){
+    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad + :cantidad, num_almacen=:num_almacen  WHERE id_producto=:id_producto;");     
+
+    $stmt -> bindParam(':num_almacen',$num_almacen);
+    $stmt -> bindParam(':cantidad',$cantidad);
+    $stmt -> bindParam(':id_producto',$id_producto);
+
+    $stmt->execute();
+    echo "<br>";
+    echo "La cantidad $cantidad se ha aumentado correctamente al producto con id $id_producto en almacen $num_almacen";
 }
 
 //--------------------------***  5)Consulta de Stock (comconstock.php)   ***--------------------------------------------
@@ -241,7 +267,7 @@ function verNifs($conn){
 }
 
 function infoComprasIntervalo($conn, $nif, $fechaDesde, $fechaHasta){
-    $stmt = $conn->prepare("SELECT producto.id_producto, producto.nombre, producto.precio FROM compra, producto WHERE producto.id_producto=compra.id_producto AND compra.nif=:nif AND fecha_compra BETWEEN :fechaDesde AND :fechaHasta");     
+    $stmt = $conn->prepare("SELECT producto.id_producto, producto.nombre, producto.precio, compra.fecha_compra, compra.unidades FROM compra, producto WHERE producto.id_producto=compra.id_producto AND compra.nif=:nif AND fecha_compra BETWEEN :fechaDesde AND :fechaHasta");     
 
     $stmt -> bindParam(':nif',$nif);
     $stmt -> bindParam(':fechaDesde',$fechaDesde);
@@ -369,6 +395,35 @@ function verProductosDisponibles($conn){
 }
 
 
+
+
+
+
+
+
+// !!!! comprobar la cantidad del producto en ALMACENA (StockporProductoAntesdeCompra). ex. Si quedan 2 bacalaos no se puede comprar 3 bacalaos. Que de error en ese escenario
+function comprobarStockporProductoAntesdeCompra($conn, $id_producto){
+    $stmt = $conn->prepare("SELECT producto.nombre, almacena.num_almacen, almacena.id_producto, almacena.cantidad FROM producto, almacena WHERE producto.id_producto=almacena.id_producto AND producto.id_producto=:id_producto ");
+    
+    $stmt -> bindParam(':id_producto',$id_producto);
+    $stmt->execute();
+    $arrayAso = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $arrayAso = $stmt->fetchAll();
+
+    return $arrayAso;
+}
+
+
+
+
+
+
+
+
+
+
+
+
 function comprarUnProducto($conn, $nif, $id_producto, $fecha_compra, $unidades){
     $stmt = $conn->prepare("INSERT INTO COMPRA (nif, id_producto, fecha_compra, unidades) VALUES(:nif, :id_producto, :fecha_compra, :unidades);");  
     
@@ -379,13 +434,13 @@ function comprarUnProducto($conn, $nif, $id_producto, $fecha_compra, $unidades){
     $stmt->execute();
 
     echo "<br>";
-    echo "El cliente con NIF $nif ha comprado $unidades unidad de $id_producto con fecha de compra $fecha_compra";
+    echo "El cliente con NIF $nif ha comprado $unidades unidad/des de $id_producto con fecha de compra $fecha_compra";
 }
 
 function actualizarTablaAlmacenaTrasCompra($conn, $id_producto, $unidades){
-    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad - :unidad WHERE id_producto=:id_producto; ");
+    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad - :unidades WHERE id_producto=:id_producto; ");
 
-    $stmt -> bindParam(':unidad',$unidades);
+    $stmt -> bindParam(':unidades',$unidades);
     $stmt -> bindParam(':id_producto',$id_producto);
     $stmt->execute();
 
