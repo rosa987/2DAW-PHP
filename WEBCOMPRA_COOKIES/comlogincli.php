@@ -36,7 +36,7 @@
             }else{//Login con exito.  La CLAVE Si coincide con el USUARIO . CREAR COOKIE
                 $cookie_name = "nif";
                 $cookie_value = extraerNIF($conn, $username);
-                setcookie($cookie_name, $cookie_value, time() + (60 * 10), "/");
+                setcookie($cookie_name, $cookie_value, time()+60*60*24*30, "/");
 
                 echo "<br>";
                 echo '<a href="comprocli.php">COMPRA DE PRODUCTOS</a><br>';

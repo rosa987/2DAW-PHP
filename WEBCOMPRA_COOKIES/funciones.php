@@ -218,8 +218,9 @@ function asignarCantidad($conn, $num_almacen, $id_producto, $cantidad){
 
 //Va incrementando la cantidad en un determinado num_almacen
 function actualizarCantidadDeProductoExistente($conn, $num_almacen, $id_producto, $cantidad){
-    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad + :cantidad WHERE id_producto=:id_producto;");     
+    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad + :cantidad WHERE id_producto=:id_producto AND num_almacen=:num_almacen;");     
 
+    $stmt -> bindParam(':num_almacen',$num_almacen);
     $stmt -> bindParam(':cantidad',$cantidad);
     $stmt -> bindParam(':id_producto',$id_producto);
 
@@ -365,7 +366,7 @@ function nifDadoDeAlta($conn, $nif){  //devuelve true si hay un nif que coincide
     $stmt->setFetchMode(PDO::FETCH_ASSOC); 
     $resultado=$stmt->fetchAll();
     
-    var_dump($resultado);
+    //var_dump($resultado);
     if(empty($resultado)){ //Si la tabla esta vacia
        return false;
     }else{
@@ -373,7 +374,7 @@ function nifDadoDeAlta($conn, $nif){  //devuelve true si hay un nif que coincide
             // var_dump($resultado[$i]["nombre"]);
             $arrayNifs[]= $resultado[$i]["nif"];
          }
-           var_dump($arrayNifs);
+           //var_dump($arrayNifs); //descomentar luego!!
            //echo in_array($dpto, $arrayNombres, true);
            if(in_array($nif, $arrayNifs, true)){
              return true; //hay un nombre repetido encontrado
@@ -437,6 +438,10 @@ function comprarUnProducto($conn, $nif, $id_producto, $fecha_compra, $unidades){
     echo "El cliente con NIF $nif ha comprado $unidades unidades de $id_producto con fecha de compra $fecha_compra";
 }
 
+
+
+//GUAAAAAAAAAAA****::
+
 //Ver el numero total de almacenes en el q se encuentra un determinado producto
 function contarAlmacenesEnALMACENA($conn, $id_producto){
     $stmt = $conn->prepare("SELECT count(almacena.num_almacen) FROM almacena WHERE almacena.id_producto=:id_producto ");
@@ -461,8 +466,47 @@ function comprobarNumAlmacenALMACENA($conn, $id_producto){
     return $arrayAso;
 }
 
+function arrayConIDs_PRODUCTO($conn, $id_producto){
+    $stmt = $conn->prepare("SELECT almacena.id_producto FROM almacena WHERE id_producto=:id_producto AND cantidad>0 ");
+    
+    $stmt -> bindParam(':id_producto',$id_producto);
+
+    $stmt->execute();
+    $arrayAsoIDs = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $arrayAsoIDs = $stmt->fetchAll();
+    return $arrayAsoIDs;
+}
+//   NOW
+//array con datos de un determinado producto(id_producto)
+function actualizarTablaAlmacenaTrasCompra1($conn, $id_producto){
+    $stmt = $conn->prepare("SELECT almacena.num_almacen, almacena.id_producto, almacena.cantidad FROM almacena WHERE almacena.id_producto=:id_producto ");
+    
+    $stmt -> bindParam(':id_producto',$id_producto);
+    //$stmt -> bindParam(':unidades',$unidades);
+
+    $stmt->execute();
+    $arrayAsoTodasFilas = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $arrayAsoTodasFilas = $stmt->fetchAll();
+    return $arrayAsoTodasFilas;
+}
+
+function actualizarTablaAlmacenaTrasCompra2($conn,$arrayNum_almacenes, $id_producto,  $unidades, $cantidadQueQueda, $quitar){ //FALTA NUM_ALMACEN
+    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=:cantidadQueQueda WHERE id_producto=:id_producto AND num_almacen=:num_almacen; ");
+    $stmt -> bindParam(':num_almacen',$arrayNum_almacenes);
+    $stmt -> bindParam(':cantidadQueQueda',$cantidadQueQueda);
+   // $stmt -> bindParam(':quitar',$quitar); //
+    $stmt -> bindParam(':id_producto',$id_producto);
+    //$stmt -> bindParam(':unidades',$unidades);//
+    $stmt->execute();
+    var_dump($cantidadQueQueda);
+    var_dump(max(0, $unidades - $quitar));
+    return max(0, $unidades - $quitar);
+}
+
+
+//no uso esto:
 function actualizarTablaAlmacenaTrasCompra($conn, $id_producto, $unidades){
-    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad - :unidades WHERE id_producto=:id_producto; ");
+    $stmt = $conn->prepare("UPDATE ALMACENA SET cantidad=cantidad - :unidades WHERE id_producto=:id_producto AND cantidad>=0; ");
 
     $stmt -> bindParam(':unidades',$unidades);
     $stmt -> bindParam(':id_producto',$id_producto);
@@ -471,6 +515,26 @@ function actualizarTablaAlmacenaTrasCompra($conn, $id_producto, $unidades){
     echo "<br>";
     echo "Cantidad en tabla ALMACENA se ha actualizado ";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //------------------10. REGISTRO DE CLIENTES-----------------
@@ -575,5 +639,20 @@ function extraerNIF($conn, $username){  //devuelve true si hay un nif que coinci
     }     
 }
 
-?>
+//---------------------------------------------------
 
+
+function verPrecioProductos($conn, $id_producto){
+    $stmt = $conn->prepare("SELECT precio FROM PRODUCTO WHERE producto.id_producto=:id_producto ");
+    
+    $stmt -> bindParam(':id_producto',$id_producto);
+    $stmt->execute();
+
+    $arrayAso = $stmt->setFetchMode(PDO::FETCH_ASSOC);
+    $arrayAso = $stmt->fetchAll();
+   //var_dump($arrayAso);
+    return $arrayAso;
+}
+
+
+?>

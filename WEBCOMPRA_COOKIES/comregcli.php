@@ -45,9 +45,7 @@
             }else{
                 registrar_cliente($conn, $nif, $nombre, $apellido, $cp, $direccion, $ciudad);
                 $conn = null;
-                //nuevo_Cliente($conn, $nif, $nombre, $apellido, $cp, $direccion, $ciudad); //crear nuevo Cliente
-                //registrar_Usuario($conn,$nombre, $apellido);//asignar un nombre de usuario y clave a un Cliente
-                //insertar_UsuarioEnCLIENTE($conn, $nombre, $nif);
+            
                 
             } 
         }else{
