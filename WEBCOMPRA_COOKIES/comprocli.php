@@ -12,8 +12,9 @@
 if( !empty($_POST["producto"]) && empty($_POST["unidades"]) ){//echo "No ha se ha elegido producto y/o unidade. NO se crea la cesta";
 }
 else if (isset($_POST["cesta"])){ //clic en boton AÑADIR A CESTA
-
-    $unidades=$_POST["unidades"];
+    
+    //Recogida de variables:
+    $unidades=$_POST["unidades"]; 
     $id_producto=$_POST["producto"]; //el id del prod del desplegable 
     $fecha_compra = date('Y/m/d'); //fecha actual
    
@@ -24,53 +25,36 @@ else if (isset($_POST["cesta"])){ //clic en boton AÑADIR A CESTA
     $precio= $array_precio[0]["precio"];
     var_dump($precio);
    
-    $CESTA_arr = array(); //Un array vacio.
-    var_dump(count($CESTA_arr));
+    //Si el array $CESTA_arr no existe, que lo cree
+    if(!isset($CESTA_arr)){
+        $CESTA_arr = array(); //Un array vacio.
 
-     if(isset($_COOKIE["carrito"])){ //SI la COOKIE ya existe que añada productos 
-     
-            $CESTA_arr= unserialize($_COOKIE['carrito']); 
-            var_dump($CESTA_arr); //Mostrar cookie
-
-     }
-     
-     //Añadir productos a la CESTA
-     if( isset($_POST["producto"]) && isset($_POST["unidades"]) ){ 
-        $lastPos= count($CESTA_arr);
-        var_dump($lastPos);
-        $CESTA_arr[$lastPos]['producto']=$_POST["producto"];
-        $CESTA_arr[$lastPos]['unidades']=$_POST["unidades"];
-        $CESTA_arr[$lastPos]['precio']= $precio;
-     }
-
-     //Crear COOKIE
-     setcookie('carrito', serialize($CESTA_arr), time()+60*60*24*30, "/"); 
+          //Añadir productos a la CESTA
+     $CESTA_arr[$id_producto]['unidades']=$_POST["unidades"];
+     $CESTA_arr[$id_producto]['precio']= $precio;
       
-    /* Arreglar:
-    if(!empty($nif)){
-        $conn=conexion();
+   
+    }else{
+        
+     //Añadir productos a la CESTA
+     $CESTA_arr[$id_producto]['unidades']=$_POST["unidades"];
+     $CESTA_arr[$id_producto]['precio']= $precio;
+ 
 
-            if($unidades>0){
-                $arrayProductAcomprar=comprobarStockporProductoAntesdeCompra($conn, $id_producto); //ver si se puede comprar la cantidad deseada del producto
-                var_dump($arrayProductAcomprar);
-                $sumCantiTotal= array_sum(array_column($arrayProductAcomprar,"cantidad")) ;
-                var_dump($sumCantiTotal);
-                if($sumCantiTotal< $unidades){
-                    echo "ERROR. Lo sentimos, las unidades a comprar son mayores a la cantidad disponible del producto($id_producto). A continuación el stock disponible para comprar:". "<br>";
-                    foreach($arrayProductAcomprar as $row) {
-                        echo "Nombre del producto: " . $row["nombre"]. "  || Nº almacen: " . $row["num_almacen"]."  || id: " . $row["id_producto"]."  || Cantidad disponible: " . $row["cantidad"]. "<br>";
-                    }
-                    echo "En total la cantidad disponible para comprar es $sumCantiTotal";
-                }else{
-                    comprarUnProducto($conn, $nif, $id_producto, $fecha_compra, $unidades);  //
-                    $numAlmacenesEnQueSeEncuentraProducto=contarAlmacenesEnALMACENA($conn, $id_producto);
-                    actualizarTablaAlmacenaTrasCompra($conn, $id_producto, $unidades);
-                }
-             
-                $conn = null;
-                
-            }  
-    } */
+    }
+
+      //Crear COOKIE
+      setcookie('carrito', serialize($CESTA_arr), time()+60*60*24*30, "/"); 
+      var_dump($CESTA_arr);
+
+ 
+     //SI la COOKIE ya existe que Muestre su contenido
+     if(isset($_COOKIE["carrito"])){ 
+ 
+      $CESTA_contenido= unserialize($_COOKIE['carrito']); 
+      var_dump($CESTA_contenido); //Mostrar cookie
+
+     }
 }else if (isset($_POST["comprar"])){
 
     if(isset($_COOKIE["carrito"])){			
