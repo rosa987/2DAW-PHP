@@ -4,6 +4,8 @@ echo "Inicio index"."<br>";
 require_once("db/db.php");
 
 // Llamada al controlador
-require_once("controllers/peliculas_controller.php");
+require_once("controllers/login_controller.php");
+
+//require_once("controllers/menu_controller.php");
 echo "Fin index"."<br>";
 ?>
